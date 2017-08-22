@@ -3,10 +3,10 @@ cls
 set _cs_found=0
 set _cs_files_found=0
 set _insufficient_permissions=1
-set _default_cs_paths="c:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\cfg" "c:\SteamLibrary\steamapps\common\Counter-Strike Global Offensive\csgo\cfg" "d:\Games\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\cfg"
+set _default_cs_paths="c:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive" "c:\SteamLibrary\steamapps\common\Counter-Strike Global Offensive" "d:\Games\Steam\steamapps\common\Counter-Strike Global Offensive"
 
-if NOT "%1" == "" (
-	set _default_cs_paths=%1
+if not "%1" == "" (
+	set _default_cs_paths="%1"
 	echo Using specified path.
 	echo.
 	echo.
@@ -65,25 +65,25 @@ if %_cs_found% == 0 (
 goto :eof
 
 :folders_loop
-	if exist "%~1" (
-		if not exist "%~1\my_overrides.cfg" (
-			echo // Write your configuration overrides below > "%~1\my_overrides.cfg"
+	if exist "%~1\csgo\cfg" (
+		if not exist "%~1\csgo\cfg\my_overrides.cfg" (
+			echo // Write your configuration overrides below > "%~1\csgo\cfg\my_overrides.cfg"
 		)
 
 		for /r %2 %%f in (*.cfg) do (
 			set _filename=%%~nxf
 			
-			if exist "%~1" (
+			if exist "%~1\csgo\cfg" (
 				set _cs_found=1
-				if exist "%~1\%%~nxf" (
-					dir "%~1\%%~nxf" | find "<SYMLINK>" >NUL 2>&1 && (
-						echo An old symbolic link for "%~1\%%~nxf" is found. Trying to remove it... 
-						del "%~1\%%~nxf"
+				if exist "%~1\csgo\cfg\%%~nxf" (
+					dir "%~1\csgo\cfg\%%~nxf" | find "<SYMLINK>" >NUL 2>&1 && (
+						echo An old symbolic link for "%~1\csgo\cfg\%%~nxf" is found. Trying to remove it... 
+						del "%~1\csgo\cfg\%%~nxf"
 					)
 					
-					if exist "%~1\%%~nxf" (
+					if exist "%~1\csgo\cfg\%%~nxf" (
 						set _cs_files_found=1
-						echo Found a file "%%~nxf" instead of link in directory: "%~1".
+						echo Found a file "%%~nxf" instead of link in directory: "%~1\csgo\cfg".
 						echo Please remove it and restart this script.
 						echo.
 						echo.
@@ -96,8 +96,8 @@ goto :eof
 					)
 				)
 				
-				if not exist "%~1\%%~nxf" (
-					mklink "%~1\%%~nxf" "%%~f" && set _insufficient_permissions=0
+				if not exist "%~1\csgo\cfg\%%~nxf" (
+					mklink "%~1\csgo\cfg\%%~nxf" "%%~f" && set _insufficient_permissions=0
 					echo.
 				)
 			)
